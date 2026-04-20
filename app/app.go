@@ -3,14 +3,16 @@ package app
 import (
 	"log"
 	"net/http"
+
+	"github.com/gorilla/mux"
 )
 
 func Start() {
-	// Go built-in multiplexer
+	// Custom Multiplexer
+	muxR := mux.NewRouter()
 	// Defining routes
-	http.HandleFunc("/greet", greet)
-	http.HandleFunc("/customers", getAllCustomers)
-
+	muxR.HandleFunc("/greet", greet)
+	muxR.HandleFunc("/customers", getAllCustomers)
 	// starting the server
-	log.Fatal(http.ListenAndServe("localhost:8000", nil))
+	log.Fatal(http.ListenAndServe("localhost:8000", muxR))
 }
