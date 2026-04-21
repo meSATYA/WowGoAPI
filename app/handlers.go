@@ -3,27 +3,32 @@ package app
 import (
 	"encoding/json"
 	"encoding/xml"
-	"fmt"
 	"net/http"
 
-	"github.com/gorilla/mux"
+	"github.com/meSATYA/WowGoAPI/service"
 )
 
-type Customer struct {
-	Name    string `json:"name" xml:"name"`
-	City    string `json:"city" xml:"city"`
-	ZipCode string `json:"zip_code" xml:"zip_code"`
+//type Customer struct {
+//	Name    string `json:"name" xml:"name"`
+//	City    string `json:"city" xml:"city"`
+//	ZipCode string `json:"zip_code" xml:"zip_code"`
+//}
+
+type CustomerHandlers struct {
+	service service.CustomerService
 }
 
-func greet(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Hello World!!!")
-}
+//func greet(w http.ResponseWriter, r *http.Request) {
+//	fmt.Fprint(w, "Hello World!!!")
+//}
 
-func getAllCustomers(w http.ResponseWriter, r *http.Request) {
-	customers := []Customer{
-		{Name: "John Doe", City: "New York", ZipCode: "10001"},
-		{Name: "Jane Smith", City: "Los Angeles", ZipCode: "90003"},
-	}
+func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
+	//customers := []Customer{
+	//	{Name: "John Doe", City: "New York", ZipCode: "10001"},
+	//	{Name: "Jane Smith", City: "Los Angeles", ZipCode: "90003"},
+	//}
+
+	customers, _ := ch.service.GetAllCustomer()
 
 	if r.Header.Get("Content-Type") == "application/xml" {
 		w.Header().Set("Content-Type", "application/xml")
@@ -34,11 +39,11 @@ func getAllCustomers(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func getCustomer(w http.ResponseWriter, r *http.Request) {
-	vars := mux.Vars(r)
-	fmt.Fprintf(w, "Customer with name %s", vars["customer_id"])
-}
-
-func createCustomer(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprint(w, "Created Customer :)")
-}
+//func getCustomer(w http.ResponseWriter, r *http.Request) {
+//	vars := mux.Vars(r)
+//	fmt.Fprintf(w, "Customer with name %s", vars["customer_id"])
+//}
+//
+//func createCustomer(w http.ResponseWriter, r *http.Request) {
+//	fmt.Fprint(w, "Created Customer :)")
+//}
