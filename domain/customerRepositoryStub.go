@@ -10,8 +10,8 @@ func (s CustomerRepositoryStub) FindAll() ([]Customer, error) {
 
 func NewCustomerRepositoryStub() CustomerRepositoryStub {
 	customers := []Customer{
-		{Id: "1001", Name: "Satyajit", Email: "satyajit@gmail.com", Phone: "1234567890", City: "Berlin", Zip: "13569", DOB: "12-12-1986", Status: "active"},
-		{Id: "1002", Name: "Dambro", Email: "dambroooo@gmail.com", Phone: "9876543210", City: "Magdeburg", Zip: "24040", DOB: "22-04-1977", Status: "inactive"},
+		{Id: "1001", Name: "Satyajit", City: "Berlin", Zipcode: "13569", DateOfBirth: "12-12-1986", Status: "1"},
+		{Id: "1002", Name: "Dambro", City: "Magdeburg", Zipcode: "24040", DateOfBirth: "22-04-1977", Status: "0"},
 	}
 	return CustomerRepositoryStub{customers: customers}
 }
