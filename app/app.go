@@ -19,6 +19,7 @@ func Start() {
 
 	// Defining routes
 	muxR.HandleFunc("/customers", ch.getAllCustomers).Methods(http.MethodGet)
+	muxR.HandleFunc("/customers/{customer_id:[0-9]+}", ch.getCustomerById).Methods(http.MethodGet)
 
 	//muxR.HandleFunc("/greet", greet).Methods(http.MethodGet)
 	//muxR.HandleFunc("/customer", createCustomer).Methods(http.MethodPost)

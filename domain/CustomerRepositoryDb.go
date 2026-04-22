@@ -6,6 +6,7 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/meSATYA/WowGoAPI/errs"
 )
 
 type CustomerRepositoryDb struct {
@@ -33,6 +34,22 @@ func (d *CustomerRepositoryDb) FindAll() ([]Customer, error) {
 		customers = append(customers, cst)
 	}
 	return customers, nil
+}
+
+func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
+	customerSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
+
+	row := d.db.QueryRow(customerSql, id)
+	var c Customer
+	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil, errs.CustomerNotFound("Customer Not Found")
+		}
+		log.Println("Error while scanning customer " + err.Error())
+		return nil, errs.CustomUnexpectedError("Unexpeceted Database Error")
+	}
+	return &c, nil
 }
 
 func NewCustomerRepositoryDb() *CustomerRepositoryDb {

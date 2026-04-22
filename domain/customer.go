@@ -1,5 +1,7 @@
 package domain
 
+import "github.com/meSATYA/WowGoAPI/errs"
+
 type Customer struct {
 	Id          string `json:"id"`
 	Name        string `json:"name"`
@@ -11,4 +13,5 @@ type Customer struct {
 
 type CustomerRepository interface {
 	FindAll() ([]Customer, error)
+	ById(string) (*Customer, *errs.AppError)
 }
