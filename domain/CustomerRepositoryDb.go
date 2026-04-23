@@ -7,23 +7,28 @@ import (
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/jmoiron/sqlx"
 	"github.com/meSATYA/WowGoAPI/errs"
 	"github.com/meSATYA/WowGoAPI/logger"
 )
 
 type CustomerRepositoryDb struct {
-	db *sql.DB
+	db *sqlx.DB
 }
 
 func (d *CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppError) {
-	var rows *sql.Rows
+	//var rows *sql.Rows
 	var err error
+	customers := make([]Customer, 0)
+
 	if status == "" {
 		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers"
-		rows, err = d.db.Query(findAllSql)
+		err = d.db.Select(&customers, findAllSql)
+		//rows, err = d.db.Query(findAllSql)
 	} else {
 		findAllSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where status = ?"
-		rows, err = d.db.Query(findAllSql, status)
+		err = d.db.Select(&customers, findAllSql, status)
+		//rows, err = d.db.Query(findAllSql, status)
 	}
 
 	if err != nil {
@@ -31,25 +36,24 @@ func (d *CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppErro
 		return nil, errs.CustomUnexpectedError("Unexpeceted Database Error")
 	}
 
-	customers := make([]Customer, 0)
-	for rows.Next() {
-		var cst Customer
-		err := rows.Scan(&cst.Id, &cst.Name, &cst.City, &cst.Zipcode, &cst.DateOfBirth, &cst.Status)
-		if err != nil {
-			logger.Error("Error while scanning customers " + err.Error())
-			return nil, errs.CustomUnexpectedError("Unexpeceted Database Error")
-		}
-		customers = append(customers, cst)
-	}
+	//err = sqlx.StructScan(rows, &customers)
+	//
+	//if err != nil {
+	//	logger.Error("Error while scanning customers " + err.Error())
+	//	return nil, errs.CustomUnexpectedError("Unexpeceted Database Error")
+	//}
+
 	return customers, nil
 }
 
 func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 	customerSql := "select customer_id, name, city, zipcode, date_of_birth, status from customers where customer_id = ?"
 
-	row := d.db.QueryRow(customerSql, id)
+	//row := d.db.QueryRow(customerSql, id)
 	var c Customer
-	err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status)
+	err := d.db.Get(&c, customerSql, id)
+
+	//err := row.Scan(&c.Id, &c.Name, &c.City, &c.Zipcode, &c.DateOfBirth, &c.Status)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			return nil, errs.CustomerNotFound("Customer Not Found")
@@ -68,7 +72,7 @@ func NewCustomerRepositoryDb() *CustomerRepositoryDb {
 	dbName := os.Getenv("DB_NAME")
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s", user, password, host, port, dbName)
-	db, err := sql.Open("mysql", dsn)
+	db, err := sqlx.Open("mysql", dsn)
 	if err != nil {
 		panic(err)
 	}

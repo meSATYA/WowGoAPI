@@ -8,3 +8,4 @@ Developing Microservices Using Go API
 4. Database Adapter Integration
 5. Error Handling
 6. Structurred Logging
+7. sqlx Library Integration
