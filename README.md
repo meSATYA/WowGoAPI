@@ -6,4 +6,4 @@ Developing Microservices Using Go API
 2. Use Gorilla Mux
 3. Hexagonal Architecture
 4. Database Adapter Integration
-5. Error Handling and Logging
+5. Error Handling

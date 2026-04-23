@@ -2,18 +2,11 @@ package app
 
 import (
 	"encoding/json"
-	"encoding/xml"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/meSATYA/WowGoAPI/service"
 )
-
-//type Customer struct {
-//	Name    string `json:"name" xml:"name"`
-//	City    string `json:"city" xml:"city"`
-//	ZipCode string `json:"zip_code" xml:"zip_code"`
-//}
 
 type CustomerHandlers struct {
 	service service.CustomerService
@@ -24,19 +17,14 @@ type CustomerHandlers struct {
 //}
 
 func (ch *CustomerHandlers) getAllCustomers(w http.ResponseWriter, r *http.Request) {
-	//customers := []Customer{
-	//	{Name: "John Doe", City: "New York", ZipCode: "10001"},
-	//	{Name: "Jane Smith", City: "Los Angeles", ZipCode: "90003"},
-	//}
+	status := r.URL.Query().Get("status")
 
-	customers, _ := ch.service.GetAllCustomer()
+	customers, err := ch.service.GetAllCustomer(status)
 
-	if r.Header.Get("Content-Type") == "application/xml" {
-		w.Header().Set("Content-Type", "application/xml")
-		xml.NewEncoder(w).Encode(customers)
+	if err != nil {
+		writeResponse(w, err.Code, err.AsMessage())
 	} else {
-		w.Header().Set("Content-Type", "application/json")
-		json.NewEncoder(w).Encode(customers)
+		writeResponse(w, http.StatusOK, customers)
 	}
 }
 
