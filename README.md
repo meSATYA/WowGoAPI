@@ -7,3 +7,4 @@ Developing Microservices Using Go API
 3. Hexagonal Architecture
 4. Database Adapter Integration
 5. Error Handling
+6. Structurred Logging

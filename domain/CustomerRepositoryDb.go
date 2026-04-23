@@ -3,12 +3,12 @@ package domain
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
 	"time"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/meSATYA/WowGoAPI/errs"
+	"github.com/meSATYA/WowGoAPI/logger"
 )
 
 type CustomerRepositoryDb struct {
@@ -27,7 +27,7 @@ func (d *CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppErro
 	}
 
 	if err != nil {
-		log.Println("Error while querying customer table " + err.Error())
+		logger.Error("Error while querying customer table " + err.Error())
 		return nil, errs.CustomUnexpectedError("Unexpeceted Database Error")
 	}
 
@@ -36,7 +36,7 @@ func (d *CustomerRepositoryDb) FindAll(status string) ([]Customer, *errs.AppErro
 		var cst Customer
 		err := rows.Scan(&cst.Id, &cst.Name, &cst.City, &cst.Zipcode, &cst.DateOfBirth, &cst.Status)
 		if err != nil {
-			log.Println("Error while scanning customers " + err.Error())
+			logger.Error("Error while scanning customers " + err.Error())
 			return nil, errs.CustomUnexpectedError("Unexpeceted Database Error")
 		}
 		customers = append(customers, cst)
@@ -54,7 +54,7 @@ func (d CustomerRepositoryDb) ById(id string) (*Customer, *errs.AppError) {
 		if err == sql.ErrNoRows {
 			return nil, errs.CustomerNotFound("Customer Not Found")
 		}
-		log.Println("Error while scanning customer " + err.Error())
+		logger.Error("Error while scanning customer " + err.Error())
 		return nil, errs.CustomUnexpectedError("Unexpeceted Database Error")
 	}
 	return &c, nil
