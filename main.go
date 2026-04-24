@@ -6,7 +6,6 @@ import (
 )
 
 func main() {
-
 	logger.Info("Starting WowGoAPI")
 	app.Start()
 }

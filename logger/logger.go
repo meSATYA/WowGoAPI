@@ -36,3 +36,8 @@ func Error(message string, fields ...zap.Field) *zap.Logger {
 	log.Error(message, fields...)
 	return log
 }
+
+func Fatal(message string, fields ...zap.Field) *zap.Logger {
+	log.Fatal(message, fields...)
+	return log
+}
