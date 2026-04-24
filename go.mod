@@ -9,7 +9,10 @@ require (
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
+	github.com/jfeliu007/goplantuml v1.6.3 // indirect
 	github.com/jmoiron/sqlx v1.4.0 // indirect
+	github.com/spf13/afero v1.8.2 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.uber.org/zap v1.27.1 // indirect
+	golang.org/x/text v0.3.7 // indirect
 )

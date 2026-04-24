@@ -1,0 +1,92 @@
+@startuml
+skinparam packageStyle rectangle
+
+package "WowGoAPI" {
+  package main {
+    class "main.go\nmain()"
+  }
+
+  package app {
+    class "Start()"
+    class "CustomerHandlers"
+    class "AccountHandler"
+  }
+
+  package service {
+    interface "CustomerService"
+    class "DefaultCustomerService"
+    interface "AccountService"
+    class "DefaultAccountService"
+  }
+
+  package domain {
+    interface "CustomerRepository"
+    class "CustomerRepositoryDb"
+    class "CustomerRepositoryStub"
+    interface "AccountRepository"
+    class "AccountRepositoryDb"
+    class "Customer"
+    class "Account"
+    class "Transaction"
+  }
+
+  package dto {
+    class "CustomerResponse"
+    class "NewAccountRequest"
+    class "NewAccountResponse"
+    class "TransactionRequest"
+    class "TransactionResponse"
+  }
+
+  package errs {
+    class "AppError"
+  }
+
+  package logger {
+    class "logger"
+  }
+}
+
+package "External Dependencies" {
+  class "gorilla/mux"
+  class "jmoiron/sqlx"
+}
+
+"main.go\nmain()" --> "Start()" : calls
+"main.go\nmain()" --> logger : logs
+"Start()" --> "gorilla/mux" : router setup
+"Start()" --> "jmoiron/sqlx" : opens DB
+"Start()" --> "CustomerHandlers" : creates
+"Start()" --> "AccountHandler" : creates
+"Start()" --> "CustomerRepositoryDb" : NewCustomerRepositoryDb(db)
+"Start()" --> "AccountRepositoryDb" : NewAccountRepositoryDb(db)
+"Start()" --> "DefaultCustomerService" : NewCustomerService(repo)
+"Start()" --> "DefaultAccountService" : NewAccountService(repo)
+"Start()" --> logger : logs
+
+"CustomerHandlers" --> "CustomerService" : depends on
+"AccountHandler" --> "AccountService" : depends on
+"DefaultCustomerService" ..|> "CustomerService"
+"DefaultAccountService" ..|> "AccountService"
+"DefaultCustomerService" --> "CustomerRepository" : uses
+"DefaultAccountService" --> "AccountRepository" : uses
+"CustomerRepositoryDb" ..|> "CustomerRepository"
+"AccountRepositoryDb" ..|> "AccountRepository"
+"CustomerRepositoryDb" --> "jmoiron/sqlx" : queries DB
+"AccountRepositoryDb" --> "jmoiron/sqlx" : queries DB
+"CustomerRepositoryDb" --> logger : logs
+"AccountRepositoryDb" --> logger : logs
+"Start()" --> logger : logs
+
+"DefaultCustomerService" --> "CustomerResponse" : returns
+"DefaultAccountService" --> "NewAccountResponse" : returns
+"DefaultAccountService" --> "TransactionResponse" : returns
+"Customer" --> "CustomerResponse" : ToDto()
+"Account" --> "NewAccountResponse" : ToNewAccountResponseDto()
+"Transaction" --> "TransactionResponse" : ToMakeTransactionResponseDto()
+"NewAccountRequest" --> errs : Validate()
+"TransactionRequest" --> errs : Validate()
+"TransactionRequest" --> "Transaction" : builds transaction
+"Account" --> "TransactionRequest" : CanWithdraw()
+
+@enduml

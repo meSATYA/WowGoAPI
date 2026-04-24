@@ -9,5 +9,6 @@ Developing Microservices Using Go API
 5. Error Handling
 6. Structured Logging
 7. sqlx Library Integration
-8. Implement Data Transfer Objects
-9. Create Customer Account POST API
+8. Data Transfer Objects (DTO)
+9. Customer Account POST API
+10. Customer Transactions POST API
