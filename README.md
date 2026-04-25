@@ -12,3 +12,4 @@ Developing Microservices Using Go API
 8. Data Transfer Objects (DTO)
 9. Customer Account POST API
 10. Customer Transactions POST API
+11. App Security using JWT

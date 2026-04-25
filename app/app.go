@@ -58,20 +58,24 @@ func Start() {
 	// Defining routes
 	muxR.
 		HandleFunc("/customers", ch.getAllCustomers).
-		Methods(http.MethodGet)
+		Methods(http.MethodGet).
+		Name("GetAllCustomers")
 	muxR.
 		HandleFunc("/customers/{customer_id:[0-9]+}", ch.getCustomerById).
-		Methods(http.MethodGet)
+		Methods(http.MethodGet).
+		Name("GetCustomer")
 	muxR.
 		HandleFunc("/customers/{customer_id:[0-9]+}/account", ah.NewAccount).
-		Methods(http.MethodPost)
+		Methods(http.MethodPost).
+		Name("NewAccount")
 	muxR.
 		HandleFunc("/customers/{customer_id:[0-9]+}/account/{account_id:[0-9]+}", ah.MakeTransaction).
-		Methods(http.MethodPost)
+		Methods(http.MethodPost).
+		Name("NewTransaction")
 
-	//muxR.HandleFunc("/greet", greet).Methods(http.MethodGet)
-	//muxR.HandleFunc("/customer", createCustomer).Methods(http.MethodPost)
-	//muxR.HandleFunc("/customers/{customer_id:[0-9]+}", getCustomer).Methods(http.MethodGet)
+	am := AuthMiddleware{domain.NewAuthRepository()}
+	muxR.Use(am.authorizationHandler())
+
 	// starting the server
 
 	address := os.Getenv("SERVER_ADDRESS")
