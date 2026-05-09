@@ -6,6 +6,7 @@ import (
 	"github.com/meSATYA/WowGoAPI/errs"
 )
 
+//go:generate mockgen -destination=../mocks/service/mockCustomerService.go -package=service github.com/meSATYA/WowGoAPI/service CustomerService
 type CustomerService interface {
 	GetAllCustomer(string) ([]domain.Customer, *errs.AppError)
 	GetCustomerById(id string) (*dto.CustomerResponse, *errs.AppError)

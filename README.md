@@ -13,3 +13,4 @@ Developing Microservices Using Go API
 9. Customer Account POST API
 10. Customer Transactions POST API
 11. App Security using JWT
+12. Unit Testing of the Application
